@@ -39,15 +39,56 @@ function Screen() {
     };
 }
 
-// Animation loop
+// Ball logic
+function ballController() {
+    // Handle top and bottom wall collisions
+    if (ball.y <= 0 || ball.y + ball.height >= SCREEN.canvas.height) {
+        ball.velocityY *= -1; // Reverse Y direction
+    }
+
+    // Handle collision with the player
+    if (
+        ball.x + ball.width >= player.x &&
+        ball.y + ball.height >= player.y &&
+        ball.y <= player.y + player.height
+    ) {
+        ball.velocityX *= -1; // Reverse X direction
+    }
+
+    // Handle collision with the wall
+    if (
+        ball.x <= WALL.x + WALL.width &&
+        ball.y + ball.height >= WALL.y &&
+        ball.y <= WALL.y + WALL.height
+    ) {
+        ball.velocityX *= -1; // Reverse X direction
+    }
+
+    // Reset ball if it goes past the player or wall
+    if (ball.x < 0 || ball.x > SCREEN.canvas.width) {
+        resetBall();
+    }
+}
+
+// Reset the ball to the center with a new random trajectory
+function resetBall() {
+    ball.x = SCREEN.canvas.width / 2 - ball.width / 2;
+    ball.y = SCREEN.canvas.height / 2 - ball.height / 2;
+    ball.velocityX = (Math.random() < 0.5 ? -1 : 1) * (3 + Math.random() * 2); // Random velocity
+    ball.velocityY = (Math.random() < 0.5 ? -1 : 1) * (3 + Math.random() * 2); // Random velocity
+}
+
+// Main game loop. Animates and calls logic every frame.
 function animate() {
     // Clear the canvas at the start of the frame
     SCREEN.clearCanvas();
+    ballController();
 
     // Update and redraw all drawables
     for (let i = 0; i < DRAWABLES.length; i++) {
         const d = DRAWABLES[i];
         // Update position
+        d.x += d.velocityX;
         d.y += d.velocityY;
 
         // Boundary checking
@@ -106,7 +147,18 @@ const WALL = Drawable(
     velocityY = 0
 );
 
-const DRAWABLES = [player, WALL];
+const BALL_WIDTH = 20;
+const BALL_HEIGHT = 20;
+const ball = Drawable(
+    x = SCREEN.canvas.width / 2 - BALL_WIDTH / 2,
+    y = SCREEN.canvas.height / 2 - BALL_HEIGHT / 2,
+    width = BALL_WIDTH,
+    height = BALL_HEIGHT,
+    velocityX = (Math.random() < 0.5 ? -1 : 1) * (3 + Math.random() * 2), // Random initial velocity X
+    velocityY = (Math.random() < 0.5 ? -1 : 1) * (3 + Math.random() * 2)  // Random initial velocity Y
+);
+
+const DRAWABLES = [player, WALL, ball];
 
 // Start the animation loop
 animate();
