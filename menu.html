@@ -9,12 +9,22 @@
   <div class="container">
     <div id="settings">
       <h2>Settings</h2>
-        <p> Maybe there will be some fun buttons in here to let the user customize the game</p>
+      <div id="button-panel">
+        <p> It could be fun to animate these so they look like pinball buttons </p>
+        <input class="menu-button" type="button" value="button"/>
+        <input class="menu-button" type="button" value="button"/>
+        <input class="menu-button" type="button" value="button"/>
+      </div>
+      <div>
+        <input class="start-button" type="button" value="start game">
+      </div>
     </div>
-    <div id="fun-animation">
-      <p> This could contain a fun animation/dramatization of the game</p>
+    <div id="animation">
+      <p> place holder for game animation </p>
+      <canvas id="game-animation" width="600" height="400"  style="border:3px solid #000000; box-shadow: 12px 12px 2px 1px rgba(0, 0, 0, .1);"></canvas>
     </div>
   </div>
-  <div id="score"><p>Down here is the high scores</p></div>
 </body>
 </html>
+
+<script src="menu-pong.js"></script>
