@@ -1,5 +1,5 @@
 /**
- * Script for defining the main pingpong game 
+ * Script for defining the main pingpong game
  */
 
 // The player object
@@ -21,18 +21,23 @@ function Screen() {
 
     // draw a rectangle
     function drawRectangle(x, y, width, height) {
-        ctx.fillStyle = 'rgb(57, 255, 20)'; // Set rectangle color
+        var styles = getComputedStyle(document.getElementById('screen'));
+        var color = styles.getPropertyValue('color')
+        ctx.fillStyle = color;
+        //ctx.fillStyle = 'rgb(57, 255, 20)'; // Set rectangle color
         ctx.fillRect(x, y, width, height); // Draw the rectangle
     }
 
     // clear the canvas
     function clearCanvas() {
         ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the entire canvas
-        ctx.fillStyle = "black";
+        var styles = getComputedStyle(document.getElementById('screen'));
+        var color = styles.getPropertyValue('background-color')
+        ctx.fillStyle = color;
         ctx.fillRect(0, 0, canvas.width, canvas.height); // Redraw the black background
     }
 
-    return { 
+    return {
         drawRectangle,
         clearCanvas,
         canvas
@@ -89,7 +94,7 @@ function ballController() {
         const maxDeflection = 4; // Max speed at the edges of the paddle
         const deflectionFactor = distanceFromCenter / (ENEMY.height / 2); // Normalize distance (-1 to 1)
         ball.velocityY = deflectionFactor * maxDeflection; // Adjust Y velocity
-    
+
         // Calculate total velocity to maintain constant speed
         const totalSpeed = Math.sqrt(ball.velocityX ** 2 + ball.velocityY ** 2); // Current speed
         const desiredSpeed = 10; // Constant total speed
@@ -186,8 +191,8 @@ const SCREEN = Screen();
 const PLAYER_WIDTH = 25;
 const PLAYER_HEIGHT = 125;
 const player = Drawable(
-    x = SCREEN.canvas.width - 50, 
-    y = (SCREEN.canvas.height / 2) - (PLAYER_HEIGHT / 2), 
+    x = SCREEN.canvas.width - 50,
+    y = (SCREEN.canvas.height / 2) - (PLAYER_HEIGHT / 2),
     width = PLAYER_WIDTH,
     height = PLAYER_HEIGHT,
     velocityX = 0,
@@ -197,8 +202,8 @@ const player = Drawable(
 const ENEMY_WIDTH = 25;
 const ENEMY_HEIGHT = 125;
 const ENEMY = Drawable(
-    x = 50 - ENEMY_WIDTH, 
-    y = (SCREEN.canvas.height / 2) - (ENEMY_HEIGHT / 2), 
+    x = 50 - ENEMY_WIDTH,
+    y = (SCREEN.canvas.height / 2) - (ENEMY_HEIGHT / 2),
     width = ENEMY_WIDTH,
     height = ENEMY_HEIGHT,
     velocityX = 0,
