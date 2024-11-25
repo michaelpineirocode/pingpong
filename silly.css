@@ -1,0 +1,39 @@
+body {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    
+    height: 100vh;
+    width: 100vw;
+
+    display: grid;
+    grid-template-areas: 
+    "h h h"
+    "b b b"
+    "f f f";
+
+    align-content: space-between;
+}
+
+body > * {
+    border: solid black 1px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 4em;
+    letter-spacing: 7px;
+    word-spacing: 10px;
+    grid-area: h;
+}
+
+#score {
+    grid-area: f;
+}
+
+.container {
+    grid-area: b;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 3px 4px 2px black;
+}
