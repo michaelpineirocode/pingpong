@@ -2,7 +2,8 @@
 <html>
 <head>
   <title>PING PONG!</title>
-  <link rel="stylesheet" href="styles/pastel/main.css">
+  <link rel="stylesheet" href="styles/pastel/menu.css" id="styleSheet">
+  <script src="main.js"></script>
 </head>
 <body>
   <header>
@@ -11,12 +12,15 @@
   <main>
     <!-- I don't know if we will have both gameplay options -->
     <!-- and settings, but I included both just in case -->
+    <p id="currentStyle" hidden>pastel</p>
     <section class="control-panel">
       <div class="settings">
         <h2>Settings</h2>
-        <button class="settings-button"> Toggle Option </button>
-        <button class="settings-button"> Toggle Option </button>
-        <button class="settings-button"> Toggle Option </button>
+        <label for="styles">Choose a style:</label>
+        <select name="styles" id="styles" onchange="changeStyle()">
+          <option value="pastel" selected="selected">Pastel</option>
+          <option value="dark">Dark</option>
+        </select>
       </div>
       <div class="gameplay-modes">
         <h2> Gamplay Modes</h2>

@@ -1,0 +1,41 @@
+header {
+  text-align: center;
+  background-color: rgb(35, 45, 63);
+  padding: 10px;
+  font-size: x-large;
+}
+
+h2 {
+  font-size: xx-large;
+}
+
+body {
+  background-color: rgb(15, 15, 15);
+  text-align: center;
+  color: rgb(100, 229, 212);
+}
+
+.control-panel {
+  padding: 10px;
+  background-color: rgb(0, 91, 65);
+  width: fit-content;
+  margin: auto;
+}
+
+.start-panel {
+  padding: 10px;
+}
+
+.gameplay-animation-panel {
+  padding: 10px;
+}
+
+button {
+  background-color: rgb(0, 129, 112);
+  padding: 3px;
+  font-size: medium;
+}
+
+.start-button {
+  font-size: x-large;
+}
