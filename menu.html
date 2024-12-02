@@ -24,14 +24,14 @@
       </div>
       <div class="gameplay-modes">
         <h2> Gamplay Modes</h2>
-        <button class="play-mode-button"> Select gameplay mode </button>
-        <button class="play-mode-button"> Select gameplay mode </button>
-        <button class="play-mode-button"> Select gameplay mode </button>
+        <button class="play-mode-button" onclick="setMode(this, 'blockbreaker')"> Block Breaker </button>
+        <button class="play-mode-button" onclick="setMode(this, 'multiplayer')"> Multiplayer </button>
+        <button class="play-mode-button" onclick="setMode(this, 'hardcore')"> Hardcore Mode </button>
       </div>
     </section>
     <section class="start-panel">
       <!-- start button, redirects to index page on click -->
-      <button class="start-button" onclick="document.location='index.html'"> Start Game </button>
+      <button class="start-button" onclick="start()"> Start Game </button>
     </section>
     <section class="gameplay-animation-panel">
       <p> placeholder for a fun interactive or animated panel describes or shows how the game works </p>
