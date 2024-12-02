@@ -225,3 +225,11 @@ const DRAWABLES = [player, ball, ENEMY];
 
 // Start the animation loop
 animate();
+
+// get the settings from url parameters
+document.addEventListener('DOMContentLoaded', () => {
+    var urlParameters = new URLSearchParams(window.location.search);
+    var mode = urlParameters.get('mode');
+
+    alert(mode);
+})
