@@ -8,6 +8,38 @@
   <header>
     <h1>PING PONG MASTER</h1>
   </header>
+  <div id="menu">
+    <!-- I don't know if we will have both gameplay options -->
+    <!-- and settings, but I included both just in case -->
+    <p id="currentStyle" hidden>pastel</p>
+    <section class="control-panel">
+      <div class="settings">
+        <h2>Settings</h2>
+        <label for="styles">Choose a style:</label>
+        <select name="styles" id="styles" onchange="changeStyle()">
+          <option value="pastel" selected="selected">Pastel</option>
+          <option value="dark">Dark</option>
+        </select>
+      </div>
+      <div class="gameplay-modes">
+        <h2> Gameplay Modes</h2>
+        <button class="play-mode-button" onclick="setMode(this, 'default')"> Pong </button>
+        <button class="play-mode-button" onclick="setMode(this, 'hardcore')"> Hardcore Pong </button>
+        <button class="play-mode-button" onclick="setMode(this, 'blockbreaker')"> Block Breaker </button>
+        <button class="play-mode-button" onclick="setMode(this, 'multiplayer')"> Multiplayer </button>
+      </div>
+    </section>
+    <section class="start-panel">
+      <!-- start button, redirects to index page on click -->
+      <button class="start-button" onclick="start()"> Start Game </button>
+    </section>
+    <section class="gameplay-animation-panel">
+      <p> placeholder for a fun interactive or animated panel describes or shows how the game works </p>
+    </section>
+  </div>
+  <label>
+    <input type="checkbox" id="menuToggle"> Hide menu
+  </label>
   <canvas id="screen" width="1000" height="500"></canvas>
   <script src="bingbong.js"></script>
 </body>
