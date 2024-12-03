@@ -2,7 +2,8 @@
  * Script for defining the main pingpong game
  */
 
-var mode;
+var currentGameMode, selectedGameMode;
+var animationFrame;
 
 // The player object
 function Drawable(x, y, width, height, velocityX, velocityY) {
@@ -73,13 +74,14 @@ function ballController() {
 
         // Calculate total velocity to maintain constant speed
         const totalSpeed = Math.sqrt(ball.velocityX ** 2 + ball.velocityY ** 2); // Current speed
-        const desiredSpeed = 10; // Constant total speed
+        const desiredSpeed = currentGameMode === "hardcore" ? 15 : 10; // Constant total speed
+
         ball.velocityX *= desiredSpeed / totalSpeed; // Adjust X velocity to maintain constant speed
         ball.velocityY *= desiredSpeed / totalSpeed; // Adjust Y velocity to maintain constant speed
 
     }
 
-    if (mode == "blockbreaker") {
+    if (currentGameMode == "blockbreaker") {
         for (let i = 0; i < BLOCKS.length; i++) {
             const block = BLOCKS[i];
             if (
@@ -122,7 +124,8 @@ function ballController() {
 
             // Calculate total velocity to maintain constant speed
             const totalSpeed = Math.sqrt(ball.velocityX ** 2 + ball.velocityY ** 2); // Current speed
-            const desiredSpeed = 10; // Constant total speed
+            const desiredSpeed = currentGameMode === "hardcore" ? 15 : 10; // Constant total speed
+
             ball.velocityX *= desiredSpeed / totalSpeed; // Adjust X velocity to maintain constant speed
             ball.velocityY *= desiredSpeed / totalSpeed; // Adjust Y veloc
         }
@@ -141,11 +144,11 @@ function enemyController() {
 
     // Move up if ball is above the enemy paddle
     if (ball.y + ball.height / 2 < centerY) {
-        ENEMY.velocityY = -1; // Move up
+        ENEMY.velocityY = currentGameMode === "hardcore" ? -3 : -1; // Move up
     }
     // Move down if ball is below the enemy paddle
     else if (ball.y + ball.height / 2 > centerY) {
-        ENEMY.velocityY = 1; // Move down
+        ENEMY.velocityY = currentGameMode === "hardcore" ? 3 : 1; // Move down
     }
     // Stop moving if the enemy paddle is aligned with the ball
     else {
@@ -162,6 +165,12 @@ function resetBall() {
     ball.y = SCREEN.canvas.height / 2 - ball.height / 2;
     ball.velocityX = (Math.random() < 0.5 ? -1 : 1) * (3 + Math.random() * 2); // Random velocity
     ball.velocityY = (Math.random() < 0.5 ? -1 : 1) * (3 + Math.random() * 2); // Random velocity
+
+
+    if (currentGameMode == "hardcore") {
+        ball.velocityX *= 2;
+        ball.velocityY *= 2;
+    }
 }
 
 // Main game loop. Animates and calls logic every frame.
@@ -170,7 +179,7 @@ function animate() {
     SCREEN.clearCanvas();
     ballController();
 
-    if(mode != "multiplayer")
+    if(currentGameMode == "default" || currentGameMode == "hardcore")
     {
         enemyController();
     }
@@ -189,7 +198,7 @@ function animate() {
         SCREEN.drawRectangle(d.x, d.y, d.width, d.height);
     }
 
-    if (mode == "blockbreaker") {
+    if (currentGameMode == "blockbreaker") {
         for (const block of BLOCKS) {
             SCREEN.drawRectangle(block.x, block.y, block.width, block.height);
         }
@@ -200,7 +209,7 @@ function animate() {
     }
 
     // Request the next frame
-    requestAnimationFrame(animate);
+    animationFrame = requestAnimationFrame(animate);
 }
 
 // Input listeners to update player velocity
@@ -227,7 +236,7 @@ document.addEventListener("keyup", (event) => {
 
 // Input listeners to update enemy's velocity if multiplayer is selected
 document.addEventListener("keydown", (event) => {
-    if(mode == "multiplayer")
+    if(currentGameMode == "multiplayer")
     {
         switch (event.key) {
             case "w":
@@ -242,11 +251,13 @@ document.addEventListener("keydown", (event) => {
 
 // Input listener for stopping movement
 document.addEventListener("keyup", (event) => {
-    switch (event.key) {
+    if(currentGameMode == "multiplayer") {
+        switch (event.key) {
         case "w":
         case "s":
             ENEMY.velocityY = 0;
             break;
+        }
     }
 });
 
@@ -274,10 +285,6 @@ const ENEMY = Drawable(
     velocityX = 0,
     velocityY = 1
 );
-
-if (mode == "multiplayer") {
-    velocityY = 0;
-}
 
 const BALL_WIDTH = 20;
 const BALL_HEIGHT = 20;
@@ -325,25 +332,51 @@ function setMode(button, mode){
     element.style.borderColor = 'black';
   });
   button.style.borderColor = 'white';
-  this.mode = mode;
+  this.selectedGameMode = mode;
 }
 
 function start() {
-  if (!mode) {
+  if (!selectedGameMode) {
     alert("You must select a mode before starting the game.")
     return;
   }
 
+  // breaking out of the recursive animate loop upon mode switch to prevent infinite speedups (this took so long to fix lol)
+  if (animationFrame) {
+    cancelAnimationFrame(animationFrame);
+  }
+
+  currentGameMode = selectedGameMode;
+
+    DRAWABLES.length = 0;
+    DRAWABLES.push(player, ball);
+    if (currentGameMode !== "blockbreaker") {
+        DRAWABLES.push(ENEMY);
+    }
+
     // setup for block break
-    if(mode == "blockbreaker"){
+    if(currentGameMode == "blockbreaker"){
         setupBlocks();
+        resetDrawables();
         ENEMY.width = 0;
         ENEMY.height = 0;
     }
 
-    else {
+    // setup for multiplayer
+    else if(currentGameMode == "multiplayer")
+    {
+        resetDrawables();
+        ENEMY.velocityY = 0;
         ENEMY.width = ENEMY_WIDTH;
-        ENEMY_HEIGHT = ENEMY_HEIGHT;
+        ENEMY.height = ENEMY_HEIGHT;
+    }
+
+    // setup for default
+    else if (currentGameMode == "default" || currentGameMode == "hardcore") {
+        resetDrawables();
+        ENEMY.velocityY = 1;
+        ENEMY.width = ENEMY_WIDTH;
+        ENEMY.height = ENEMY_HEIGHT;
     }
     
     // Start the animation loop
@@ -363,3 +396,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+function resetDrawables()
+{
+    player.x = SCREEN.canvas.width - 50;
+    player.y = (SCREEN.canvas.height / 2) - (PLAYER_HEIGHT / 2);
+    player.width = PLAYER_WIDTH;
+    player.height = PLAYER_HEIGHT;
+    player.velocityX = 0;
+    player.velocityY = 0;
+
+    ENEMY.x = 50 - ENEMY_WIDTH;
+    ENEMY.y = (SCREEN.canvas.height / 2) - (ENEMY_HEIGHT / 2);
+    ENEMY.width = ENEMY_WIDTH;
+    ENEMY.height = ENEMY_HEIGHT;
+    ENEMY.velocityX = 0;
+    ENEMY.velocityY = 1;
+    
+    resetBall();
+}
