@@ -3,7 +3,8 @@
  */
 
 var currentGameMode, selectedGameMode;
-var mainAnimationFrame;
+var currentBackgroundMusic = null;
+
 var mainAnimationRunning = true;
 var mainAnimationFrame, secondaryAnimationFrame;
 
@@ -246,19 +247,16 @@ function explode(particles, callback){
         if (elapsed < 1000) {
 
             SCREEN.clearCanvas();
-            
+    
             // Update and redraw all particles
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
-                
                 // Update position
                 p.x += p.velocityX;
                 p.y += p.velocityY;
-                
                 // draw the particle
                 SCREEN.drawRectangle(p.x, p.y, p.width, p.height);
             }
-
             // recursive call that keeps animating the explosion
             secondaryAnimationFrame = requestAnimationFrame(run);
         
@@ -437,6 +435,7 @@ function start() {
     cancelAnimationFrame(mainAnimationFrame);
   }
 
+  document.getElementById(currentGameMode)?.pause();
   currentGameMode = selectedGameMode;
 
     DRAWABLES.length = 0;
@@ -472,9 +471,10 @@ function start() {
         player.score = 0;
         updateScores();
     }
-    
-    // start the game song
-    document.getElementById("gameSong").play();
+
+    if (currentBackgroundMusic != null) document.getElementById(currentBackgroundMusic).pause();
+    currentBackgroundMusic = currentGameMode + "Sound"; // backgroundMusic id is tied to gamemode
+    document.getElementById(currentBackgroundMusic).play();
     
     // Start the animation loop
     animate();

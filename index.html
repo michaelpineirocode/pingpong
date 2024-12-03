@@ -9,10 +9,20 @@
   <header>
     <h1>PING PONG MASTER</h1>
   </header>
-  <div id="menu">
-    <audio id="gameSong" preload="auto" loop>
-      <source src="./sounds/game.wav" type="audio/wav">
-    </audio>   
+  <audio id="defaultSound" preload="auto" loop>
+    <source src="./sounds/classic.wav" type="audio/wav">
+  </audio>
+  <audio id="hardcoreSound" preload="auto" loop>
+    <source src="./sounds/hardcore.wav" type="audio/wav">
+  </audio> 
+  <audio id="blockbreakerSound" preload="auto" loop>
+    <source src="./sounds/blockbreaker.wav" type="audio/wav">
+  </audio>   
+  <audio id="multiplayerSound" preload="auto" loop>
+    <source src="./sounds/multiplayer.wav" type="audio/wav">
+  </audio>
+
+  <div id="menu"> 
     <p id="currentStyle" hidden>pastel</p>
     <section class="control-panel">
       <div class="settings">
