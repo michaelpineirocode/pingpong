@@ -39,3 +39,27 @@ button {
 .start-button {
   font-size: x-large;
 }
+
+canvas {
+  background-color: rgb(222, 216, 249);
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+#score-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 1000px; /* Match the canvas width */
+  margin: 0 auto 10px auto; /* Center the container and add bottom margin */
+  font-size: 2rem;
+  color: rgb(53, 162, 159); /* Match your existing text color */
+}
+
+.score {
+  width: 100px;
+  text-align: center;
+}

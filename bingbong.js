@@ -132,7 +132,12 @@ function ballController() {
         }
         
         // Reset ball if it goes past the player or ENEMY
-        if (ball.x < 0 || ball.x > SCREEN.canvas.width) {
+        // Reset ball if it goes past the player or ENEMY
+        if (ball.x < 0) { // the player wins
+            player.score += 1
+            resetBall();
+        } else if (ball.x > SCREEN.canvas.width) { // the enemy wins
+            ENEMY.score += 1
             resetBall();
         }
     }
@@ -160,6 +165,12 @@ function enemyController() {
     ENEMY.y = Math.max(0, Math.min(ENEMY.y + ENEMY.velocityY, SCREEN.canvas.height - ENEMY.height));
 }
 
+function updateScores() {
+    document.getElementById('enemy-score').innerHTML = ENEMY.score
+    document.getElementById('player-score').innerHTML = player.score
+
+}
+
 // Reset the ball to the center with a new random trajectory
 function resetBall() {
     ball.x = SCREEN.canvas.width / 2 - ball.width / 2;
@@ -172,6 +183,8 @@ function resetBall() {
         ball.velocityX *= 2;
         ball.velocityY *= 2;
     }
+    // update the scores
+    updateScores()
 }
 
 // Main game loop. Animates and calls logic every frame.
@@ -274,7 +287,8 @@ const player = Drawable(
     width = PLAYER_WIDTH,
     height = PLAYER_HEIGHT,
     velocityX = 0,
-    velocityY = 0
+    velocityY = 0,
+    score=0
 );
 
 const ENEMY_WIDTH = 25;
@@ -285,7 +299,8 @@ const ENEMY = Drawable(
     width = ENEMY_WIDTH,
     height = ENEMY_HEIGHT,
     velocityX = 0,
-    velocityY = 1
+    velocityY = 1,
+    score=0
 );
 
 const BALL_WIDTH = 20;
@@ -379,6 +394,9 @@ function start() {
         ENEMY.velocityY = 1;
         ENEMY.width = ENEMY_WIDTH;
         ENEMY.height = ENEMY_HEIGHT;
+        ENEMY.score = 0;
+        player.score = 0;
+        updateScores()
     }
     
     // Start the animation loop
