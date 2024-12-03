@@ -28,7 +28,6 @@ function Screen() {
         var styles = getComputedStyle(document.getElementById('screen'));
         var color = styles.getPropertyValue('color')
         ctx.fillStyle = color;
-        //ctx.fillStyle = 'rgb(57, 255, 20)'; // Set rectangle color
         ctx.fillRect(x, y, width, height); // Draw the rectangle
     }
 
@@ -61,6 +60,10 @@ function ballController() {
         ball.y + ball.height >= player.y &&
         ball.y <= player.y + player.height
     ) {
+        bounce = document.getElementById("bounce");
+        bounce.pause();
+        bounce.currentTime = 0;
+        bounce.play();
         ball.velocityX *= -1; // Reverse X direction
 
         // Calculate how far the ball is from the center of the paddle
@@ -91,7 +94,11 @@ function ballController() {
                 ball.y < block.y + block.height &&
                 ball.y + ball.height > block.y
             ) {
-                ball.velocityX *= -1; 
+                bounce = document.getElementById("bounce");
+                bounce.pause();
+                bounce.currentTime = 0;
+                bounce.play();
+                ball.velocityX *= -1;
                 BLOCKS.splice(i, 1);
 
                 break;
@@ -111,6 +118,10 @@ function ballController() {
             ball.y + ball.height >= ENEMY.y &&
             ball.y <= ENEMY.y + ENEMY.height
         ) {
+            bounce = document.getElementById("bounce");
+            bounce.pause();
+            bounce.currentTime = 0;
+            bounce.play();
             ball.velocityX *= -1; // Reverse X direction
 
             // Calculate how far the ball is from the center of the enemy paddle
@@ -130,7 +141,7 @@ function ballController() {
             ball.velocityX *= desiredSpeed / totalSpeed; // Adjust X velocity to maintain constant speed
             ball.velocityY *= desiredSpeed / totalSpeed; // Adjust Y veloc
         }
-        
+
         // Reset ball if it goes past the player or ENEMY
         // Reset ball if it goes past the player or ENEMY
         if (ball.x < 0) { // the player wins
@@ -353,6 +364,7 @@ function setMode(button, mode){
 }
 
 function start() {
+  document.getElementById("backgroundMusic").play();
   if (!selectedGameMode) {
     alert("You must select a mode before starting the game.")
     return;
@@ -398,7 +410,7 @@ function start() {
         player.score = 0;
         updateScores()
     }
-    
+
     // Start the animation loop
     animate();
 }
@@ -432,6 +444,6 @@ function resetDrawables()
     ENEMY.height = ENEMY_HEIGHT;
     ENEMY.velocityX = 0;
     ENEMY.velocityY = 1;
-    
+
     resetBall();
 }
