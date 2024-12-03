@@ -3,7 +3,9 @@
  */
 
 var currentGameMode, selectedGameMode;
-var animationFrame;
+var mainAnimationFrame;
+var mainAnimationRunning = true;
+var mainAnimationFrame, secondaryAnimationFrame;
 
 // The player object
 function Drawable(x, y, width, height, velocityX, velocityY) {
@@ -134,10 +136,13 @@ function ballController() {
         // Reset ball if it goes past the player or ENEMY
         // Reset ball if it goes past the player or ENEMY
         if (ball.x < 0) { // the player wins
-            player.score += 1
+            player.score += 1;
+            scoreExplosion(ball.x, ball.y);
             resetBall();
+
         } else if (ball.x > SCREEN.canvas.width) { // the enemy wins
-            ENEMY.score += 1
+            ENEMY.score += 1;
+            scoreExplosion(ball.x, ball.y);
             resetBall();
         }
     }
@@ -184,11 +189,13 @@ function resetBall() {
         ball.velocityY *= 2;
     }
     // update the scores
-    updateScores()
+    updateScores();
 }
 
 // Main game loop. Animates and calls logic every frame.
 function animate() {
+    if(!mainAnimationRunning) return;
+
     // Clear the canvas at the start of the frame
     SCREEN.clearCanvas();
     ballController();
@@ -223,7 +230,76 @@ function animate() {
     }
 
     // Request the next frame
-    animationFrame = requestAnimationFrame(animate);
+    mainAnimationFrame = requestAnimationFrame(animate);
+}
+
+// score animation
+function explode(particles, callback){
+    let startTime = null;
+
+    function run(timestamp) {
+        
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        
+        // Run for 1 seconds
+        if (elapsed < 1000) {
+
+            SCREEN.clearCanvas();
+            
+            // Update and redraw all particles
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                
+                // Update position
+                p.x += p.velocityX;
+                p.y += p.velocityY;
+                
+                // draw the particle
+                SCREEN.drawRectangle(p.x, p.y, p.width, p.height);
+            }
+
+            // recursive call that keeps animating the explosion
+            secondaryAnimationFrame = requestAnimationFrame(run);
+        
+        } else {
+            callback(); // Call the callback to resume main animation
+        }
+    }
+    requestAnimationFrame(run); // timestamp is automatically provided by requestAnimationFrame
+}
+
+// Pause the main animation and run the secondary animation
+function scoreExplosion(ballX, ballY) {
+    if (mainAnimationRunning) {
+        // pause main animation
+        mainAnimationRunning = false;
+        cancelAnimationFrame(mainAnimationFrame);
+
+        // create particles
+        let particles = [];
+        for (i = 0; i <= 1500; i++) {
+            let size = Math.random() * 3;
+            let particle = Drawable(
+                x = ballX,
+                y = ballY, 
+                width = size,
+                height = size, 
+                velocityX = (Math.random() - 0.5) * (Math.random() * 6), 
+                velocityY = (Math.random() - 0.5) * (Math.random() * 6),
+            );
+            // draw initial particles
+            SCREEN.drawRectangle(particle.x, particle.y, particle.width, particle.height);
+            particles.push(particle);
+        }
+
+        // calls the explode function with particles and an anonymous call back function
+        explode(particles, () => {
+            // restarts the main animation
+            mainAnimationRunning = true;
+            requestAnimationFrame(animate);
+        });
+    }
 }
 
 // Input listeners to update player velocity
@@ -335,8 +411,6 @@ function setupBlocks() {
     }
 }
 
-
-
 // style stuff, we can deal with this later
 
 // function changeStyle() {
@@ -359,8 +433,8 @@ function start() {
   }
 
   // breaking out of the recursive animate loop upon mode switch to prevent infinite speedups (this took so long to fix lol)
-  if (animationFrame) {
-    cancelAnimationFrame(animationFrame);
+  if (mainAnimationFrame) {
+    cancelAnimationFrame(mainAnimationFrame);
   }
 
   currentGameMode = selectedGameMode;
@@ -396,8 +470,11 @@ function start() {
         ENEMY.height = ENEMY_HEIGHT;
         ENEMY.score = 0;
         player.score = 0;
-        updateScores()
+        updateScores();
     }
+    
+    // start the game song
+    document.getElementById("gameSong").play();
     
     // Start the animation loop
     animate();
