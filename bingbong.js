@@ -2,6 +2,8 @@
  * Script for defining the main pingpong game
  */
 
+var mode;
+
 // The player object
 function Drawable(x, y, width, height, velocityX, velocityY) {
     return {
@@ -98,6 +100,7 @@ function ballController() {
         // Calculate total velocity to maintain constant speed
         const totalSpeed = Math.sqrt(ball.velocityX ** 2 + ball.velocityY ** 2); // Current speed
         const desiredSpeed = 10; // Constant total speed
+
         ball.velocityX *= desiredSpeed / totalSpeed; // Adjust X velocity to maintain constant speed
         ball.velocityY *= desiredSpeed / totalSpeed; // Adjust Y veloc
     }
@@ -143,7 +146,11 @@ function animate() {
     // Clear the canvas at the start of the frame
     SCREEN.clearCanvas();
     ballController();
-    enemyController();
+
+    if(mode != "multiplayer")
+    {
+        enemyController();
+    }
 
     // Update and redraw all drawables
     for (let i = 0; i < DRAWABLES.length; i++) {
@@ -181,6 +188,31 @@ document.addEventListener("keyup", (event) => {
         case "ArrowUp":
         case "ArrowDown":
             player.velocityY = 0;
+            break;
+    }
+});
+
+// Input listeners to update enemy's velocity if multiplayer is selected
+document.addEventListener("keydown", (event) => {
+    if(mode == "multiplayer")
+    {
+        switch (event.key) {
+            case "w":
+                ENEMY.velocityY = -5;
+                break;
+            case "s":
+                ENEMY.velocityY = 5;
+                break;
+        }
+    }
+});
+
+// Input listener for stopping movement
+document.addEventListener("keyup", (event) => {
+    switch (event.key) {
+        case "w":
+        case "s":
+            ENEMY.velocityY = 0;
             break;
     }
 });
@@ -229,7 +261,7 @@ animate();
 // get the settings from url parameters
 document.addEventListener('DOMContentLoaded', () => {
     var urlParameters = new URLSearchParams(window.location.search);
-    var mode = urlParameters.get('mode');
+    mode = urlParameters.get('mode');
 
     alert(mode);
 })
