@@ -18,4 +18,5 @@ body {
   background-color: rgb(205, 193, 255);
   text-align: center;
   color: rgb(85, 0, 85);
+  flex-direction: column;
 }

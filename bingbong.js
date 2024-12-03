@@ -94,6 +94,12 @@ function ballController() {
                 break;
             }
         }
+        if (ball.x < 0) {
+            ball.velocityX *= -1;
+        }
+        else if (ball.x > SCREEN.canvas.width) {
+            resetBall();
+        }
     }
     else {
         // Handle collision with the ENEMY
@@ -109,7 +115,6 @@ function ballController() {
             const hitPositionY = ball.y + ball.height / 2;  // The vertical center of the ball at the point of contact
             const distanceFromCenter = hitPositionY - paddleCenterY;
 
-<<<<<<< HEAD
             // Scale the Y velocity based on how far from the center it hit
             const maxDeflection = 4; // Max speed at the edges of the paddle
             const deflectionFactor = distanceFromCenter / (ENEMY.height / 2); // Normalize distance (-1 to 1)
@@ -121,19 +126,11 @@ function ballController() {
             ball.velocityX *= desiredSpeed / totalSpeed; // Adjust X velocity to maintain constant speed
             ball.velocityY *= desiredSpeed / totalSpeed; // Adjust Y veloc
         }
-=======
-        // Calculate total velocity to maintain constant speed
-        const totalSpeed = Math.sqrt(ball.velocityX ** 2 + ball.velocityY ** 2); // Current speed
-        const desiredSpeed = 10; // Constant total speed
-
-        ball.velocityX *= desiredSpeed / totalSpeed; // Adjust X velocity to maintain constant speed
-        ball.velocityY *= desiredSpeed / totalSpeed; // Adjust Y veloc
->>>>>>> 213c2e49dd4f06a6f056ab88dd346e80ae6c2260
-    }
-
-    // Reset ball if it goes past the player or ENEMY
-    if (ball.x < 0 || ball.x > SCREEN.canvas.width) {
-        resetBall();
+        
+        // Reset ball if it goes past the player or ENEMY
+        if (ball.x < 0 || ball.x > SCREEN.canvas.width) {
+            resetBall();
+        }
     }
 }
 
@@ -278,6 +275,10 @@ const ENEMY = Drawable(
     velocityY = 1
 );
 
+if (mode == "multiplayer") {
+    velocityY = 0;
+}
+
 const BALL_WIDTH = 20;
 const BALL_HEIGHT = 20;
 const ball = Drawable(
@@ -293,13 +294,45 @@ const DRAWABLES = [player, ball, ENEMY];
 
 var BLOCKS = [];
 
-// Start the animation loop
-animate();
+function setupBlocks() {
+    const blockWidth = 20;
+    const blockHeight = 50;
+    const cols = 5;
+    const rows = Math.floor(SCREEN.canvas.height / (blockHeight + 10));
+    const padding = 10;
 
-// get the settings from url parameters
-document.addEventListener('DOMContentLoaded', () => {
-    var urlParameters = new URLSearchParams(window.location.search);
-    mode = urlParameters.get('mode');
+    for (let col = 0; col < cols; col++) {
+        for (let row = 0; row < rows; row++) {
+            const x = col * (blockWidth + padding) + padding;
+            const y = row * (blockHeight + padding);
+
+            BLOCKS.push(Drawable(x, y + 10, blockWidth, blockHeight, 0, 0));
+        }
+    }
+}
+
+
+
+// style stuff, we can deal with this later
+
+// function changeStyle() {
+//   newStyle = "styles/" + document.getElementById('styles').value + "/menu.css";
+//   document.getElementById("styleSheet").href = newStyle;
+// }
+
+function setMode(button, mode){
+  Array.from(document.getElementsByClassName("play-mode-button")).forEach(element => {
+    element.style.borderColor = 'black';
+  });
+  button.style.borderColor = 'white';
+  this.mode = mode;
+}
+
+function start() {
+  if (!mode) {
+    alert("You must select a mode before starting the game.")
+    return;
+  }
 
     // setup for block break
     if(mode == "blockbreaker"){
@@ -307,21 +340,26 @@ document.addEventListener('DOMContentLoaded', () => {
         ENEMY.width = 0;
         ENEMY.height = 0;
     }
-})
 
-function setupBlocks() {
-    const blockWidth = 50;
-    const blockHeight = 20;
-    const rows = 5;
-    const cols = Math.floor(SCREEN.canvas.width / blockWidth);
-    const padding = 10;
-
-    for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-            const x = col * (blockWidth + padding) + padding;
-            const y = row * (blockHeight + padding) + padding;
-
-            BLOCKS.push(Drawable(x, y, blockWidth, blockHeight, 0, 0));
-        }
+    else {
+        ENEMY.width = ENEMY_WIDTH;
+        ENEMY_HEIGHT = ENEMY_HEIGHT;
     }
+    
+    // Start the animation loop
+    animate();
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const checkbox = document.getElementById("menuToggle");
+    const menu = document.getElementById("menu");
+
+    // hook up to checkbox change event
+    checkbox.addEventListener("change", () => {
+        if (checkbox.checked) {
+            menu.style.display = "none";
+        } else {
+            menu.style.display = "block";
+        }
+    });
+});
