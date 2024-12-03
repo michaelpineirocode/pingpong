@@ -77,29 +77,47 @@ function ballController() {
 
     }
 
-    // Handle collision with the ENEMY
-    if (
-        ball.x <= ENEMY.x + ENEMY.width &&
-        ball.y + ball.height >= ENEMY.y &&
-        ball.y <= ENEMY.y + ENEMY.height
-    ) {
-        ball.velocityX *= -1; // Reverse X direction
+    if (mode == "blockbreaker") {
+        for (let i = 0; i < BLOCKS.length; i++) {
+            const block = BLOCKS[i];
+            if (
+                ball.x < block.x + block.width &&
+                ball.x + ball.width > block.x &&
+                ball.y < block.y + block.height &&
+                ball.y + ball.height > block.y
+            ) {
+                ball.velocityX *= -1; 
+                BLOCKS.splice(i, 1);
 
-         // Calculate how far the ball is from the center of the enemy paddle
-        const paddleCenterY = ENEMY.y + ENEMY.height / 2;
-        const hitPositionY = ball.y + ball.height / 2;  // The vertical center of the ball at the point of contact
-        const distanceFromCenter = hitPositionY - paddleCenterY;
+                break;
+            }
+        }
+    }
+    else {
+        // Handle collision with the ENEMY
+        if (
+            ball.x <= ENEMY.x + ENEMY.width &&
+            ball.y + ball.height >= ENEMY.y &&
+            ball.y <= ENEMY.y + ENEMY.height
+        ) {
+            ball.velocityX *= -1; // Reverse X direction
 
-        // Scale the Y velocity based on how far from the center it hit
-        const maxDeflection = 4; // Max speed at the edges of the paddle
-        const deflectionFactor = distanceFromCenter / (ENEMY.height / 2); // Normalize distance (-1 to 1)
-        ball.velocityY = deflectionFactor * maxDeflection; // Adjust Y velocity
+            // Calculate how far the ball is from the center of the enemy paddle
+            const paddleCenterY = ENEMY.y + ENEMY.height / 2;
+            const hitPositionY = ball.y + ball.height / 2;  // The vertical center of the ball at the point of contact
+            const distanceFromCenter = hitPositionY - paddleCenterY;
 
-        // Calculate total velocity to maintain constant speed
-        const totalSpeed = Math.sqrt(ball.velocityX ** 2 + ball.velocityY ** 2); // Current speed
-        const desiredSpeed = 10; // Constant total speed
-        ball.velocityX *= desiredSpeed / totalSpeed; // Adjust X velocity to maintain constant speed
-        ball.velocityY *= desiredSpeed / totalSpeed; // Adjust Y veloc
+            // Scale the Y velocity based on how far from the center it hit
+            const maxDeflection = 4; // Max speed at the edges of the paddle
+            const deflectionFactor = distanceFromCenter / (ENEMY.height / 2); // Normalize distance (-1 to 1)
+            ball.velocityY = deflectionFactor * maxDeflection; // Adjust Y velocity
+
+            // Calculate total velocity to maintain constant speed
+            const totalSpeed = Math.sqrt(ball.velocityX ** 2 + ball.velocityY ** 2); // Current speed
+            const desiredSpeed = 10; // Constant total speed
+            ball.velocityX *= desiredSpeed / totalSpeed; // Adjust X velocity to maintain constant speed
+            ball.velocityY *= desiredSpeed / totalSpeed; // Adjust Y veloc
+        }
     }
 
     // Reset ball if it goes past the player or ENEMY
@@ -157,6 +175,16 @@ function animate() {
 
         // Draw the drawable
         SCREEN.drawRectangle(d.x, d.y, d.width, d.height);
+    }
+
+    if (mode == "blockbreaker") {
+        for (const block of BLOCKS) {
+            SCREEN.drawRectangle(block.x, block.y, block.width, block.height);
+        }
+
+        if(BLOCKS.length == 0) {
+            alert('win screen for block breaker');
+        }
     }
 
     // Request the next frame
@@ -223,6 +251,8 @@ const ball = Drawable(
 
 const DRAWABLES = [player, ball, ENEMY];
 
+var BLOCKS = [];
+
 // Start the animation loop
 animate();
 
@@ -231,5 +261,27 @@ document.addEventListener('DOMContentLoaded', () => {
     var urlParameters = new URLSearchParams(window.location.search);
     var mode = urlParameters.get('mode');
 
-    alert(mode);
+    // setup for block break
+    if(mode == "blockbreaker"){
+        setupBlocks();
+        ENEMY.width = 0;
+        ENEMY.height = 0;
+    }
 })
+
+function setupBlocks() {
+    const blockWidth = 50;
+    const blockHeight = 20;
+    const rows = 5;
+    const cols = Math.floor(SCREEN.canvas.width / blockWidth);
+    const padding = 10;
+
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+            const x = col * (blockWidth + padding) + padding;
+            const y = row * (blockHeight + padding) + padding;
+
+            BLOCKS.push(Drawable(x, y, blockWidth, blockHeight, 0, 0));
+        }
+    }
+}
