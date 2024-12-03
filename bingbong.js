@@ -5,6 +5,8 @@
 var currentGameMode, selectedGameMode;
 var animationFrame;
 
+const boing = new Audio("assets/boing.mp3");
+
 // The player object
 function Drawable(x, y, width, height, velocityX, velocityY) {
     return {
@@ -52,6 +54,9 @@ function ballController() {
     // Handle top and bottom wall collisions
     if (ball.y <= 0 || ball.y + ball.height >= SCREEN.canvas.height) {
         ball.velocityY *= -1; // Reverse Y direction
+
+        boing.currentTime = 0;
+        boing.play();
     }
 
     // Handle collision with the player
@@ -79,6 +84,8 @@ function ballController() {
         ball.velocityX *= desiredSpeed / totalSpeed; // Adjust X velocity to maintain constant speed
         ball.velocityY *= desiredSpeed / totalSpeed; // Adjust Y velocity to maintain constant speed
 
+        boing.currentTime = 0;
+        boing.play();
     }
 
     if (currentGameMode == "blockbreaker") {
@@ -92,7 +99,8 @@ function ballController() {
             ) {
                 ball.velocityX *= -1; 
                 BLOCKS.splice(i, 1);
-
+                boing.currentTime = 0;
+                boing.play();
                 break;
             }
         }
@@ -128,6 +136,9 @@ function ballController() {
 
             ball.velocityX *= desiredSpeed / totalSpeed; // Adjust X velocity to maintain constant speed
             ball.velocityY *= desiredSpeed / totalSpeed; // Adjust Y veloc
+
+            boing.currentTime = 0;
+            boing.play();
         }
         
         // Reset ball if it goes past the player or ENEMY
