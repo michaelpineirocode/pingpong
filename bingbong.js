@@ -21,6 +21,7 @@ function Drawable(x, y, width, height, velocityX, velocityY) {
 function Screen() {
     const canvas = document.getElementById("screen");
     const ctx = canvas.getContext("2d");
+    canvas.focus();
 
     // draw a rectangle
     function drawRectangle(x, y, width, height) {
@@ -214,6 +215,7 @@ function animate() {
 
 // Input listeners to update player velocity
 document.addEventListener("keydown", (event) => {
+    event.preventDefault();
     switch (event.key) {
         case "ArrowUp":
             player.velocityY = -5;
