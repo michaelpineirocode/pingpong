@@ -3,6 +3,7 @@
 <head>
   <title>PING PONG!</title>
   <link id="stylesheet" rel="stylesheet" href="styles/pastel/menu.css">
+  <link  id="stylesheet" rel="stylesheet" href="styles/pause.css">
   <script src="main.js"></script>
 </head>
 <body>
@@ -20,8 +21,6 @@
     </audio>
   </div>
   <div id="menu">
-    <!-- I don't know if we will have both gameplay options -->
-    <!-- and settings, but I included both just in case -->
     <p id="currentStyle" hidden>pastel</p>
     <section class="control-panel">
       <div class="settings">
@@ -41,16 +40,12 @@
       </div>
     </section>
     <section class="start-panel">
-      <!-- start button, redirects to index page on click -->
       <button class="start-button" onclick="start()"> Start Game </button>
     </section>
-    <section class="gameplay-animation-panel">
-      <p> placeholder for a fun interactive or animated panel describes or shows how the game works </p>
-    </section>
   </div>
-  <label>
-    <input type="checkbox" id="menuToggle"> Hide menu
-  </label>
+  <section id="pause-container">
+      <button id="menuToggle" onclick="pauseGame()"> Pause (Click here or press Esc) </button>
+  </section>
   <div id="score-container">
     <div id="enemy-score" class="score"></div>
     <div id="player-score" class="score"></div>
