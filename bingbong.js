@@ -104,6 +104,7 @@ function ballController() {
             ball.velocityX *= -1;
         }
         else if (ball.x > SCREEN.canvas.width) {
+            scoreExplosion(ball.x, ball.y);
             resetBall();
         }
     }
