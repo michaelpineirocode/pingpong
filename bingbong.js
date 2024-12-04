@@ -287,6 +287,22 @@ document.addEventListener("keyup", (event) => {
     }
 });
 
+// Input listener for pause
+function pauseGame(){
+    if (animationFrame) cancelAnimationFrame(animationFrame);
+    console.log("Pause game now!");
+    const menu = document.getElementById("menu");
+    menu.style.display = "block";
+
+    document.getElementById("pause-container").style.visibility = "hidden";
+}
+document.addEventListener("keydown", (event) => {
+    event.preventDefault();
+    if (event.key === "Escape"){
+        pauseGame();
+    }
+});
+
 // Initialize the screen and drawables
 const SCREEN = Screen();
 
@@ -411,23 +427,13 @@ function start() {
         updateScores()
     }
 
-    // Start the animation loop
+    // hide main menu, display pause button
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("pause-container").style.visibility = "visible";
+
     animate();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    const checkbox = document.getElementById("menuToggle");
-    const menu = document.getElementById("menu");
-
-    // hook up to checkbox change event
-    checkbox.addEventListener("change", () => {
-        if (checkbox.checked) {
-            menu.style.display = "none";
-        } else {
-            menu.style.display = "block";
-        }
-    });
-});
 
 function resetDrawables()
 {
