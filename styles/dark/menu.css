@@ -15,18 +15,14 @@ body {
   color: rgb(100, 229, 212);
 }
 
-.control-panel {
+#controlPanel {
   padding: 10px;
   background-color: rgb(0, 91, 65);
   width: fit-content;
   margin: auto;
 }
 
-.start-panel {
-  padding: 10px;
-}
-
-.gameplay-animation-panel {
+#startPanel, #continuePanel {
   padding: 10px;
 }
 
@@ -38,6 +34,7 @@ button {
 
 .start-button {
   font-size: x-large;
+  display: inline;
 }
 
 canvas {
@@ -49,7 +46,7 @@ canvas {
   display: block;
 }
 
-#score-container {
+#scoreContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -57,4 +54,10 @@ canvas {
   margin: 0 auto 10px auto; /* Center the container and add bottom margin */
   font-size: 2rem;
   color: rgb(53, 162, 159); /* Match your existing text color */
+}
+
+.score {
+  width: 100px;
+  text-align: center;
+  padding: 10px;
 }
