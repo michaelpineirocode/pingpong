@@ -14,3 +14,21 @@
 #pause-container {
     visibility: hidden;
 }
+
+#continuePanel[data-state="menu"] {
+    /* visibility: hidden; */
+    display: none;
+}
+
+#continuePanel[data-state="pause"] {
+    /* visibility: block; */
+    display: block;
+}
+
+#startContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+}
+

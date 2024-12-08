@@ -21,9 +21,10 @@
     </audio>
   </div>
   <div id="menu">
+    <h2 id="gameOver"></h2>
     <p id="currentStyle" hidden>pastel</p>
-    <section class="control-panel">
-      <div class="settings">
+    <section id="controlPanel">
+      <div id="settings">
         <h2>Settings</h2>
         <label for="styles">Choose a style:</label>
         <select name="styles" id="styles" onchange="changeStyle()">
@@ -31,7 +32,7 @@
           <option value="dark">Dark</option>
         </select>
       </div>
-      <div class="gameplay-modes">
+      <div id="gameplayModes">
         <h2> Gameplay Modes</h2>
         <button class="play-mode-button" onclick="setMode(this, 'default')"> Pong </button>
         <button class="play-mode-button" onclick="setMode(this, 'hardcore')"> Hardcore Pong </button>
@@ -39,16 +40,24 @@
         <button class="play-mode-button" onclick="setMode(this, 'multiplayer')"> Multiplayer </button>
       </div>
     </section>
-    <section class="start-panel">
-      <button class="start-button" onclick="start()"> Start Game </button>
-    </section>
+    <div id="startContainer">
+      <section id="startPanel">
+        <button class="start-button" onclick="start()"> Start Game </button>
+      </section>
+      <section id="continuePanel" data-state="menu">
+        <button class="start-button" onclick="keepPlaying()"> Continue </button>
+      </section>
+    </div>
   </div>
-  <section id="pause-container">
+  <section id="pauseContainer">
       <button id="menuToggle" onclick="pauseGame()"> Pause (Click here or press Esc) </button>
   </section>
-  <div id="score-container">
-    <div id="enemy-score" class="score"></div>
-    <div id="player-score" class="score"></div>
+  <!-- <section id="pause-container">
+    <button id="menuToggle" onclick="pauseGame()"> Pause (Click here or press Esc) </button>
+  </section> -->
+  <div id="scoreContainer">
+    <div id="enemyScore" class="score"></div>
+    <div id="playerScore" class="score"></div>
   </div>
   <canvas id="screen" width="1000" height="500"></canvas>
   <script src="bingbong.js"></script>

@@ -15,20 +15,17 @@ body {
   color: rgb(85, 0, 85);
 }
 
-.control-panel {
+#controlPanel {
   padding: 10px;
   background-color: rgb(255, 246, 227);
   width: fit-content;
   margin: auto;
 }
 
-.start-panel {
+#startPanel, #continuePanel {
   padding: 10px;
 }
 
-.gameplay-animation-panel {
-  padding: 10px;
-}
 
 button {
   background-color: rgb(191, 236, 255);
@@ -36,8 +33,9 @@ button {
   font-size: medium;
 }
 
-.start-button {
+#startButton {
   font-size: x-large;
+  display: inline;
 }
 
 canvas {
@@ -49,7 +47,7 @@ canvas {
   display: block;
 }
 
-#score-container {
+#scoreContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -62,4 +60,5 @@ canvas {
 .score {
   width: 100px;
   text-align: center;
+  padding: 10px;
 }

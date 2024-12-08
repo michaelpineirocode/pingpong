@@ -4,8 +4,8 @@
 
 var currentGameMode, selectedGameMode;
 var mainAnimationRunning = true;
-var mainAnimationFrame, secondaryAnimationFrame;
-// var mainAnimationFrame;
+var mainAnimationFrame = null;
+var secondaryAnimationFrame;
 
 // The player object
 function Drawable(x, y, width, height, velocityX, velocityY) {
@@ -182,8 +182,8 @@ function enemyController() {
 }
 
 function updateScores() {
-    document.getElementById('enemy-score').innerHTML = ENEMY.score;
-    document.getElementById('player-score').innerHTML = player.score;
+    document.getElementById('enemyScore').innerHTML = ENEMY.score;
+    document.getElementById('playerScore').innerHTML = player.score;
 
 }
 
@@ -200,7 +200,7 @@ function resetBall() {
         ball.velocityY *= 2;
     }
     // update the scores
-    updateScores()
+    updateScores();
 }
 
 // Main game loop. Animates and calls logic every frame.
@@ -236,7 +236,8 @@ function animate() {
         }
 
         if(BLOCKS.length == 0) {
-            alert('win screen for block breaker');
+            // alert('win screen for block breaker');
+            gameOver("You won blcok breaker!");
         }
     }
 
@@ -244,6 +245,7 @@ function animate() {
     mainAnimationFrame = requestAnimationFrame(animate);
 }
 
+const WINNING_SCORE = 3;
 
 // score animation
 function explode(particles, callback){
@@ -278,6 +280,16 @@ function explode(particles, callback){
     requestAnimationFrame(run); // timestamp is automatically provided by requestAnimationFrame
 }
 
+function gameOver(winnerString){
+    // Set continuePanel state to "menu" (this removes continue option)
+    document.getElementById("continuePanel").dataset.state = "menu";
+    // Display winner string
+    document.getElementById("gameOver").innerHTML = winnerString;
+
+    document.getElementById("menu").style.display = "block";
+    document.getElementById("pauseContainer").style.visibility = "hidden";
+}
+
 // Pause the main animation and run the secondary animation
 function scoreExplosion(ballX, ballY) {
     if (mainAnimationRunning) {
@@ -285,29 +297,35 @@ function scoreExplosion(ballX, ballY) {
         mainAnimationRunning = false;
         cancelAnimationFrame(mainAnimationFrame);
 
-        // create particles
-        let particles = [];
-        for (i = 0; i <= 1500; i++) {
-            let size = Math.random() * 3;
-            let particle = Drawable(
-                x = ballX,
-                y = ballY, 
-                width = size,
-                height = size, 
-                velocityX = (Math.random() - 0.5) * (Math.random() * 6), 
-                velocityY = (Math.random() - 0.5) * (Math.random() * 6),
-            );
-            // draw initial particles
-            SCREEN.drawRectangle(particle.x, particle.y, particle.width, particle.height);
-            particles.push(particle);
-        }
+        if (player.score == WINNING_SCORE){
+            gameOver("You win!");
+        } else if (ENEMY.score == WINNING_SCORE){
+            gameOver("You loose!");
+        } else {
+            // create particles
+            let particles = [];
+            for (i = 0; i <= 1500; i++) {
+                let size = Math.random() * 3;
+                let particle = Drawable(
+                    x = ballX,
+                    y = ballY, 
+                    width = size,
+                    height = size, 
+                    velocityX = (Math.random() - 0.5) * (Math.random() * 6), 
+                    velocityY = (Math.random() - 0.5) * (Math.random() * 6),
+                );
+                // draw initial particles
+                SCREEN.drawRectangle(particle.x, particle.y, particle.width, particle.height);
+                particles.push(particle);
+            }
 
-        // calls the explode function with particles and an anonymous call back function
-        explode(particles, () => {
-            // restarts the main animation
-            mainAnimationRunning = true;
-            requestAnimationFrame(animate);
-        });
+            // calls the explode function with particles and an anonymous call back function
+            explode(particles, () => {
+                // restarts the main animation
+                mainAnimationRunning = true;
+                requestAnimationFrame(animate);
+            });
+        }
     }
 }
 
@@ -368,14 +386,33 @@ function pauseGame(){
     const menu = document.getElementById("menu");
     menu.style.display = "block";
 
-    document.getElementById("pause-container").style.visibility = "hidden";
+    document.getElementById("pauseContainer").style.visibility = "hidden";
+    // make the continue game button visible
+    document.getElementById("continuePanel").dataset.state = "pause";
 }
+
 document.addEventListener("keydown", (event) => {
     event.preventDefault();
     if (event.key === "Escape"){
         pauseGame();
     }
 });
+
+// simple continue function from pause menu input
+function keepPlaying(){
+    console.log("continue");
+    // hide main menu, display pause button
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("pauseContainer").style.visibility = "visible";
+    
+    if (!mainAnimationRunning) {
+        // continue main animation
+        mainAnimationRunning = true;
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+}
 
 // Initialize the screen and drawables
 const SCREEN = Screen();
@@ -454,18 +491,22 @@ function setMode(button, mode){
 }
 
 function start() {
-  document.getElementById("backgroundMusic").play();
-  if (!selectedGameMode) {
-    alert("You must select a mode before starting the game.")
-    return;
-  }
+    document.getElementById("backgroundMusic").play();
+    if (!selectedGameMode) {
+        alert("You must select a mode before starting the game.")
+        return;
+    }
 
-  // breaking out of the recursive animate loop upon mode switch to prevent infinite speedups (this took so long to fix lol)
-  if (mainAnimationFrame) {
-    cancelAnimationFrame(mainAnimationFrame);
-  }
+    // breaking out of the recursive animate loop upon mode switch to prevent infinite speedups (this took so long to fix lol)
+    if (mainAnimationFrame) {
+        cancelAnimationFrame(mainAnimationFrame);
+    }
 
-  currentGameMode = selectedGameMode;
+    // This resets the game after gameOver
+    mainAnimationRunning = true;
+    document.getElementById("gameOver").innerHTML = "";
+  
+    currentGameMode = selectedGameMode;
 
     DRAWABLES.length = 0;
     DRAWABLES.push(player, ball);
@@ -501,9 +542,13 @@ function start() {
         updateScores()
     }
 
+    // reset scores
+    document.getElementById('enemyScore').innerHTML = "";
+    document.getElementById('playerScore').innerHTML = "";
+
     // hide main menu, display pause button
     document.getElementById("menu").style.display = "none";
-    document.getElementById("pause-container").style.visibility = "visible";
+    document.getElementById("pauseContainer").style.visibility = "visible";
 
     animate();
 }
