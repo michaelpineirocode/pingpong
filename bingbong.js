@@ -145,6 +145,16 @@ function ballController() {
             bounce.pause();
             bounce.currentTime = 0;
             bounce.play();
+
+
+            // Adjust ball position to prevent overlap vertically (same as in the player conditional above)
+            ball.x = ENEMY.x + ENEMY.width;
+            if (ball.y + ball.height > ENEMY.y + ENEMY.height) {
+                ball.y = ENEMY.y + ENEMY.height;
+            } else if (ball.y < ENEMY.y) {
+                ball.y = ENEMY.y - ball.height;
+            }
+
             ball.velocityX *= -1; // Reverse X direction
 
             // Calculate how far the ball is from the center of the enemy paddle
@@ -491,6 +501,7 @@ const DRAWABLES = [player, ball, ENEMY];
 var BLOCKS = [];
 
 function setupBlocks() {
+    BLOCKS.length = 0;
     const blockWidth = 20;
     const blockHeight = 50;
     const cols = 5;
