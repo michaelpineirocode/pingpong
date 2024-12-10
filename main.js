@@ -1,7 +1,7 @@
 var mode = null;
 
 function changeStyle() {
-  newStyle = "styles/" + document.getElementById('styles').value + "/menu.css";
+  newStyle = "styles/" + document.getElementById('styles').value + ".css";
   document.getElementById("stylesheet").href = newStyle;
 }
 
