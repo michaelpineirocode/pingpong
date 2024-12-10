@@ -66,6 +66,17 @@ function ballController() {
         bounce.pause();
         bounce.currentTime = 0;
         bounce.play();
+
+        // Adjust ball position to prevent overlap horizontally
+        ball.x = player.x - ball.width; // Place the ball outside the paddle
+
+        // Adjust ball position to prevent overlap vertically
+        if (ball.y + ball.height > player.y + player.height) {
+            ball.y = player.y + player.height; // Place ball below the paddle
+        } else if (ball.y < player.y) {
+            ball.y = player.y - ball.height; // Place ball above the paddle
+        }
+
         ball.velocityX *= -1; // Reverse X direction
 
         // Calculate how far the ball is from the center of the paddle
