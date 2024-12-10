@@ -99,32 +99,41 @@ function ballController() {
     }
 
     if (currentGameMode == "blockbreaker") {
-        for (let i = 0; i < BLOCKS.length; i++) {
+        for (let i = BLOCKS.length - 1; i >= 0; i--) {
             const block = BLOCKS[i];
             if (
-                ball.x < block.x + block.width &&
                 ball.x + ball.width > block.x &&
-                ball.y < block.y + block.height &&
-                ball.y + ball.height > block.y
+                ball.x < block.x + block.width &&
+                ball.y + ball.height > block.y &&
+                ball.y < block.y + block.height
             ) {
+                // play the sound
                 bounce = document.getElementById("bounce");
                 bounce.pause();
                 bounce.currentTime = 0;
                 bounce.play();
+    
                 ball.velocityX *= -1;
+    
+                // remove the block
                 BLOCKS.splice(i, 1);
-
+    
+                // update player score
+                player.score += 1;
+                updateScores();
+    
                 break;
             }
         }
         if (ball.x < 0) {
             ball.velocityX *= -1;
-        }
-        else if (ball.x > SCREEN.canvas.width) {
+        } else if (ball.x > SCREEN.canvas.width) {
+            player.lives -= 1; // Decrement lives
+            updateScores();
             scoreExplosion(ball.x, ball.y);
             resetBall();
         }
-    }
+    }    
     else {
         // Handle collision with the ENEMY
         if (
@@ -193,9 +202,13 @@ function enemyController() {
 }
 
 function updateScores() {
-    document.getElementById('enemyScore').innerHTML = ENEMY.score;
-    document.getElementById('playerScore').innerHTML = player.score;
-
+    if (currentGameMode === "blockbreaker") {
+        document.getElementById('enemyScore').innerHTML = `Lives: ${player.lives}`;
+        document.getElementById('playerScore').innerHTML = `Score: ${player.score}`;
+    } else {
+        document.getElementById('enemyScore').innerHTML = ENEMY.score;
+        document.getElementById('playerScore').innerHTML = player.score;
+    }
 }
 
 // Reset the ball to the center with a new random trajectory
@@ -248,7 +261,7 @@ function animate() {
 
         if(BLOCKS.length == 0) {
             // alert('win screen for block breaker');
-            gameOver("You won blcok breaker!");
+            gameOver("You won block breaker!");
         }
     }
 
@@ -292,6 +305,9 @@ function explode(particles, callback){
 }
 
 function gameOver(winnerString){
+    // stopping animation so it isn't moving in the background of the game over screen
+    mainAnimationRunning = false;
+    if (mainAnimationFrame) cancelAnimationFrame(mainAnimationFrame);
     // Set continuePanel state to "menu" (this removes continue option)
     document.getElementById("continuePanel").dataset.state = "menu";
     // Display winner string
@@ -308,10 +324,16 @@ function scoreExplosion(ballX, ballY) {
         mainAnimationRunning = false;
         cancelAnimationFrame(mainAnimationFrame);
 
-        if (player.score == WINNING_SCORE){
+        if ((currentGameMode == "default" || currentGameMode == "hardcore") && player.score == WINNING_SCORE){
             gameOver("You win!");
-        } else if (ENEMY.score == WINNING_SCORE){
-            gameOver("You loose!");
+        } else if ((currentGameMode == "default" || currentGameMode == "hardcore") && ENEMY.score == WINNING_SCORE){
+            gameOver("You lose!");
+        } else if (currentGameMode == "multiplayer" && player.score == WINNING_SCORE) {
+            gameOver("Right player wins!");
+        } else if (currentGameMode == "multiplayer" && ENEMY.score == WINNING_SCORE) {
+            gameOver("Left player wins!");
+        } else if (currentGameMode == "blockbreaker" && player.lives == 0) {
+            gameOver("You lose!");
         } else {
             // create particles
             let particles = [];
@@ -437,7 +459,8 @@ const player = Drawable(
     height = PLAYER_HEIGHT,
     velocityX = 0,
     velocityY = 0,
-    score=0
+    score = 0,
+    lives = 3
 );
 
 const ENEMY_WIDTH = 25;
@@ -531,6 +554,10 @@ function start() {
         resetDrawables();
         ENEMY.width = 0;
         ENEMY.height = 0;
+        player.lives = 3;
+        player.score = 0;
+        ENEMY.score = 0;
+        updateScores();
     }
 
     // setup for multiplayer
@@ -540,6 +567,9 @@ function start() {
         ENEMY.velocityY = 0;
         ENEMY.width = ENEMY_WIDTH;
         ENEMY.height = ENEMY_HEIGHT;
+        player.score = 0;
+        ENEMY.score = 0;
+        updateScores();
     }
 
     // setup for default
