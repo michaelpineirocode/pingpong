@@ -1,0 +1,99 @@
+header {
+  text-align: center;
+  background-color: rgb(59, 28, 50); /* COLOR 1 */
+  padding: 10px;
+  font-size: x-large;
+}
+
+h2 {
+  font-size: xx-large;
+}
+
+body {
+  background-color: rgb(26, 26, 29); /* COLOR 2 */
+  text-align: center;
+  color: rgb(223, 177, 255); /* COLOR 3 */
+}
+
+#controlPanel {
+  padding: 10px;
+  background-color: rgb(59, 28, 50); /* COLOR 1 */
+  width: fit-content;
+  margin: auto;
+}
+
+#startPanel, #continuePanel {
+  padding: 10px;
+}
+
+
+button {
+  background-color: rgb(106, 30, 85); /* COLOR 4 */
+  color: rgb(223, 177, 255); /* COLOR 3 */
+  padding: 3px;
+  font-size: medium;
+}
+
+#startButton {
+  font-size: x-large;
+  display: inline;
+}
+
+canvas {
+  background-color: rgb(45, 45, 45); /* COLOR 6 */
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+#scoreContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 1000px; /* Match the canvas width */
+  margin: 0 auto 10px auto; /* Center the container and add bottom margin */
+  font-size: 2rem;
+  color: rgb(223, 177, 255); /* Match your existing text color */ /* COLOR 3 */
+}
+
+.score {
+  width: 100px;
+  text-align: center;
+  padding: 10px;
+}
+
+#menu {
+  position: fixed;
+  z-index: 1000;
+  top: 20%;
+  right: 32%;
+  padding: 20px;
+  width: 35%;
+  height: 40%;
+  background-color: rgb(166, 77, 121); /* COLOR 5 */
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#pause-container {
+  visibility: hidden;
+}
+
+#continuePanel[data-state="menu"] {
+  /* visibility: hidden; */
+  display: none;
+}
+
+#continuePanel[data-state="pause"] {
+  /* visibility: block; */
+  display: block;
+}
+
+#startContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: center;
+}
