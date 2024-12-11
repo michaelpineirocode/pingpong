@@ -53,6 +53,7 @@ canvas {
   justify-content: space-between;
   align-items: center;
   width: 1000px; /* Match the canvas width */
+  height: 50px;
   margin: 0 auto 10px auto; /* Center the container and add bottom margin */
   font-size: 2rem;
   color: rgb(85, 0, 85); /* Match your existing text color */ /* COLOR 3 */
@@ -61,7 +62,6 @@ canvas {
 .score {
   width: 100px;
   text-align: center;
-  padding: 10px;
 }
 
 #menu {
@@ -78,7 +78,7 @@ canvas {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-#pause-container {
+#pauseContainer {
   visibility: hidden;
 }
 
@@ -101,7 +101,8 @@ canvas {
   display: none;
   position: fixed;
   z-index: 1000;
-  top: 72%;
+  top: 82%;
+  bottom: 1%;
   right: 32%;
   padding: 20px;
   width: 35%;
