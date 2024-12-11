@@ -3,7 +3,7 @@
 <head>
   <title>PING PONG!</title>
   <link id="stylesheet" rel="stylesheet" href="styles/pastel.css">
-  <script src="main.js"></script>
+  <!-- <script src="main.js"></script> -->
 </head>
 <body>
   <header>
@@ -53,14 +53,16 @@
   <section id="pauseContainer">
       <button id="menuToggle" onclick="pauseGame()"> Pause (Click here or press Esc) </button>
   </section>
-  <!-- <section id="pause-container">
-    <button id="menuToggle" onclick="pauseGame()"> Pause (Click here or press Esc) </button>
-  </section> -->
   <div id="scoreContainer">
     <div id="enemyScore" class="score"></div>
     <div id="playerScore" class="score"></div>
   </div>
   <canvas id="screen" width="1000" height="500"></canvas>
+  <div id="instructionContainer">
+    <section id="instructions">
+      This is where the instructions will be
+    </section>
+  </div>
   <script src="bingbong.js"></script>
 </body>
 </html>

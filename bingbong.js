@@ -518,21 +518,41 @@ function setupBlocks() {
     }
 }
 
-
-
-// style stuff, we can deal with this later
-
-// function changeStyle() {
-//   newStyle = "styles/" + document.getElementById('styles').value + "/menu.css";
-//   document.getElementById("styleSheet").href = newStyle;
-// }
-
+function changeStyle() {
+    let newStyle = "styles/" + document.getElementById('styles').value + ".css";
+    document.getElementById("stylesheet").href = newStyle;
+  }
+  
 function setMode(button, mode){
   Array.from(document.getElementsByClassName("play-mode-button")).forEach(element => {
     element.style.borderColor = 'black';
   });
   button.style.borderColor = 'white';
   this.selectedGameMode = mode;
+
+  document.getElementById("instructionContainer").style.display = "block";
+  let instructionString = "Use \u2191 and \u2193 keys to move your paddle <br>";
+  console.log(mode);
+  switch(mode) {
+    case "blockbreaker":
+        instructionString += `Hit the blocks with the ball to break them. 
+        <br> Win the game by breaking all the blocks.`;
+        break;
+    case "multiplayer":
+        instructionString = "Right Player: " + instructionString;
+        instructionString += "Left Player: use 'w' and 's' keys to move your paddle. <br>";
+        instructionString += "First player to " + WINNING_SCORE + " wins! ";
+        break;
+    case "hardcore":
+        instructionString += "Watch out as the ball speeds up! <br>";
+        break;
+    case "default":
+        instructionString += "First player to " + WINNING_SCORE + " wins! ";
+        break;
+    default:
+        console.log("Error");
+  }
+  document.getElementById("instructions").innerHTML = "<p>" + instructionString + "</p>";
 }
 
 function start() {
@@ -600,6 +620,7 @@ function start() {
 
     // hide main menu, display pause button
     document.getElementById("menu").style.display = "none";
+    document.getElementById("instructionContainer").style.display = "none";
     document.getElementById("pauseContainer").style.visibility = "visible";
 
     animate();
