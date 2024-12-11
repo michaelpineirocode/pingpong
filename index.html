@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>PING PONG!</title>
   <link id="stylesheet" rel="stylesheet" href="styles/pastel.css">
-  <meta content="text/html; charset=utf-8" />
-  <link rel="icon" type="image/gif/png" href="icon.png">
+  <link rel="icon" href="icon.png">
 </head>
 <body>
   <header>
@@ -21,10 +21,10 @@
     </audio>
   </div>
   <div id="menu">
-    <h2 id="gameOver"></h2>
+    <h2 id="gameOver"> Welcome! </h2>
     <p id="currentStyle" hidden>pastel</p>
-    <section id="controlPanel">
-      <div id="settings">
+    <div id="controlPanel">
+      <section id="settings">
         <h2>Settings</h2>
         <label for="styles">Choose a style:</label>
         <select name="styles" id="styles" onchange="changeStyle()">
@@ -33,7 +33,7 @@
           <option value="dark">Dark</option>
           <option value="plum">Plum</option>
         </select>
-      </div>
+      </section>
       <div id="gameplayModes">
         <h2> Gameplay Modes</h2>
         <button class="play-mode-button" onclick="setMode(this, 'default')"> Pong </button>
@@ -41,28 +41,28 @@
         <button class="play-mode-button" onclick="setMode(this, 'blockbreaker')"> Block Breaker </button>
         <button class="play-mode-button" onclick="setMode(this, 'multiplayer')"> Multiplayer </button>
       </div>
-    </section>
+    </div>
     <div id="startContainer">
-      <section id="startPanel">
+      <div id="startPanel">
         <button class="start-button" onclick="start()"> Start Game </button>
-      </section>
-      <section id="continuePanel" data-state="menu">
+      </div>
+      <div id="continuePanel" data-state="menu">
         <button class="start-button" onclick="keepPlaying()"> Continue </button>
-      </section>
+      </div>
     </div>
   </div>
-  <section id="pauseContainer">
+  <div id="pauseContainer">
       <button id="menuToggle" onclick="pauseGame()"> Pause (Click here or press Esc) </button>
-  </section>
+  </div>
   <div id="scoreContainer">
     <div id="enemyScore" class="score"></div>
     <div id="playerScore" class="score"></div>
   </div>
   <canvas id="screen" width="1000" height="500"></canvas>
   <div id="instructionContainer">
-    <section id="instructions">
+    <div id="instructions">
       This is where the instructions will be
-    </section>
+    </div>
   </div>
   <script src="bingbong.js"></script>
 </body>
