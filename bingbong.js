@@ -62,7 +62,7 @@ function ballController() {
         ball.y + ball.height >= player.y &&
         ball.y <= player.y + player.height
     ) {
-        bounce = document.getElementById("bounce");
+        let bounce = document.getElementById("bounce");
         bounce.pause();
         bounce.currentTime = 0;
         bounce.play();
@@ -193,7 +193,7 @@ function ballController() {
 // Enemy controller logic
 function enemyController() {
     const centerY = ENEMY.y + ENEMY.height / 2;
-
+    
     // Move up if ball is above the enemy paddle
     if (ball.y + ball.height / 2 < centerY) {
         ENEMY.velocityY = currentGameMode === "hardcore" ? -3 : -1; // Move up
@@ -446,6 +446,7 @@ function keepPlaying(){
     console.log("continue");
     // hide main menu, display pause button
     document.getElementById("menu").style.display = "none";
+    document.getElementById("instructionContainer").style.display = "none";
     document.getElementById("pauseContainer").style.visibility = "visible";
     
     if (!mainAnimationRunning) {
